@@ -6,13 +6,26 @@ class TicTacToeUI:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Tic Tac Toe")
+        self.window.withdraw()
+
+        self.score_x = 0
+        self.score_o = 0
 
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
 
         self.current_player = None
+
+        self.score_label_x = tk.Label(self.window, text=f"Player X: {self.score_x}", font=("Arial", 14))
+        self.score_label_x.grid(row=3, column=0, columnspan=1, pady=10)
+
+        self.score_label_o = tk.Label(self.window, text=f"Player O: {self.score_o}", font=("Arial", 14))
+        self.score_label_o.grid(row=3, column=2, columnspan=1, pady=10)
+
         self.create_board()
         self.show_player_selection_window()
+
+        self.update_score_display()
 
         self.window.mainloop()
 
@@ -26,6 +39,7 @@ class TicTacToeUI:
 
         def set_player(player):
             self.current_player = player
+            self.window.deiconify()
             selection_window.destroy()
 
         button_frame = tk.Frame(selection_window)
@@ -57,6 +71,13 @@ class TicTacToeUI:
             self.buttons[row][col].config(text=self.current_player)
 
             if check_winner(self.board, self.current_player):
+                if self.current_player == "X":
+                    self.score_x += 1
+                else:
+                    self.score_o += 1
+
+                self.update_score_display()
+
                 messagebox.showinfo("End game", f"¡Player {self.current_player} won!")
                 self.reset_game()
             elif is_draw(self.board):
@@ -71,3 +92,8 @@ class TicTacToeUI:
             for btn in row:
                 btn.config(text="")
         self.show_player_selection_window()
+
+    def update_score_display(self):
+        self.score_label_x.config(text=f"Player X: {self.score_x}")
+        self.score_label_o.config(text=f"Player O: {self.score_o}")
+
