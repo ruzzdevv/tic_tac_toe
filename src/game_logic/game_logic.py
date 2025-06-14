@@ -1,3 +1,4 @@
+# Tic Tac Toe Game Logic
 def check_winner(board, player):
     return any(
         all(cell == player for cell in row) for row in board

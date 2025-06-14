@@ -1,16 +1,44 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, Toplevel
 from src.game_logic.game_logic import check_winner, is_draw
 
 class TicTacToeUI:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Tic Tac Toe")
-        self.current_player = "X"
+
         self.board = [["" for _ in range(3)] for _ in range(3)]
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
+
+        self.current_player = None
         self.create_board()
+        self.show_player_selection_window()
+
         self.window.mainloop()
+
+    def show_player_selection_window(self):
+        selection_window = Toplevel(self.window)
+        selection_window.title("Select initial player")
+        selection_window.grab_set()
+
+        label = tk.Label(selection_window, text="Who starts?", font=("Arial", 16))
+        label.pack(pady=10)
+
+        def set_player(player):
+            self.current_player = player
+            selection_window.destroy()
+
+        button_frame = tk.Frame(selection_window)
+        button_frame.pack(pady=10)
+
+        x_button = tk.Button(button_frame, text="X", font=("Arial", 18), width=5, command=lambda: set_player("X"))
+        o_button = tk.Button(button_frame, text="O", font=("Arial", 18), width=5, command=lambda: set_player("O"))
+
+        x_button.grid(row=0, column=0, padx=10)
+        o_button.grid(row=0, column=1, padx=10)
+
+        selection_window.protocol("WM_DELETE_WINDOW", lambda: None)
+        self.window.wait_window(selection_window)
 
     def create_board(self):
         for r in range(3):
@@ -29,10 +57,10 @@ class TicTacToeUI:
             self.buttons[row][col].config(text=self.current_player)
 
             if check_winner(self.board, self.current_player):
-                messagebox.showinfo("Fin del juego", f"¡Jugador {self.current_player} ganó!")
+                messagebox.showinfo("End game", f"¡Player {self.current_player} won!")
                 self.reset_game()
             elif is_draw(self.board):
-                messagebox.showinfo("Fin del juego", "¡Empate!")
+                messagebox.showinfo("End game", "¡Draw!")
                 self.reset_game()
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
@@ -42,4 +70,4 @@ class TicTacToeUI:
         for row in self.buttons:
             for btn in row:
                 btn.config(text="")
-        self.current_player = "X"
+        self.show_player_selection_window()

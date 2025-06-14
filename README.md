@@ -25,5 +25,12 @@ Requirements:
 - Python 3.x or higher
 - tkinter
 
+## Possible improvements
+
+1. Play against the computer.
+2. Select initial player.
+3. Puntuation system.
+4. Visual style personalization.
+
 All improvements are welcome!
 
